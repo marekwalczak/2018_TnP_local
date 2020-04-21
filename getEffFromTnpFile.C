@@ -1,5 +1,5 @@
 #include "TFile.h"
-#include "helper2.h"
+#include "helper.h"
 #include "TEfficiency.h"
 #include "TGraphAsymmErrors.h"
 #include "TRatioPlot.h"
@@ -7,7 +7,7 @@
 #include "TLegend.h"
 
 
-void getEffFromTnpFile2() {
+void getEffFromTnpFile() {
 
 
 
