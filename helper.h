@@ -22,19 +22,18 @@ TGraphAsymmErrors *plotEff(RooDataSet *a, int aa, const char* varx){
 
   for (int i=0, j=0; i<nbins; i++) {
     a->get(j);
-    ty[i] = 0.0;
-    tyhi[i] = 0.0;
-    tylo[i] = 0.0;
-    tx[i] = xAx->getBinning().binCenter(i);
-    txhi[i] = fabs(xAx->getBinning().binWidth(i)/2.); //xAx->getErrorHi()
-    txlo[i] = fabs(xAx->getBinning().binWidth(i)/2.); //xAx->getErrorLo()
-    std::cout << xAx->getVal() << "  " << fabs(xAx->getBinning().binWidth(i)/2.) << "  " << tx[i]  << std::endl;
-//    if (abs(tx[i]-xAx->getVal())/fabs(xAx->getBinning().binWidth(i)/2.)<1.01) {
-        ++j;
-        ty[i] = eff->getVal();
-        tyhi[i] = fabs(eff->getErrorHi());
-        tylo[i] = fabs(eff->getErrorLo());
- //   }
+    const auto binCenter = xAx->getBinning().binCenter(i);
+    const auto binWidth = fabs(xAx->getBinning().binWidth(i)/2.);
+    const auto binValue = xAx->getVal();
+    const bool hasEff = (fabs(binValue - binCenter) <= binWidth);
+    tx[i] = binCenter;
+    txhi[i] = binWidth;
+    txlo[i] = binWidth;
+    ty[i] = (hasEff ? eff->getVal() : 0.0);
+    tyhi[i] = (hasEff ? fabs(eff->getErrorHi()) : 0.0);
+    tylo[i] = (hasEff ? fabs(eff->getErrorLo()) : 0.0);
+    if (hasEff) { j++; }
+    std::cout << xAx->getVal() << "  " << fabs(xAx->getBinning().binWidth(i)/2.) << "  " << xAx->getError() << "  " << tx[i] << "  " << ty[i] << std::endl;
   }
 
   cout<<"NBins : "<<nbins<<endl;
@@ -47,9 +46,9 @@ TGraphAsymmErrors *plotEff(RooDataSet *a, int aa, const char* varx){
   const double *ylo = tylo;
 
 
-  TGraphAsymmErrors *b = new TGraphAsymmErrors();
-  if(aa == 1) {*b = TGraphAsymmErrors(nbins,x,y,xlo,xhi,ylo,yhi);}
-  if(aa == 0) {*b = TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
+  TGraphAsymmErrors *b = NULL;
+  if(aa == 1) {b = new TGraphAsymmErrors(nbins,x,y,xlo,xhi,ylo,yhi);}
+  if(aa == 0) {b = new TGraphAsymmErrors(nbins,x,y,0,0,ylo,yhi);}
 
   b->SetMaximum(1.1);
   b->SetMinimum(0.0);
@@ -99,7 +98,7 @@ Double_t findNcoll(int hiBin) {
    return Ncoll[hiBin];
 };
 
-TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3, const std::string& varName="") {
+TH1F *g2h(TGraphAsymmErrors *g, const std::string& varName="") {
    int n = g->GetN();
    double *x = g->GetX();
    double *y = g->GetY();
@@ -112,8 +111,6 @@ TH1F *g2h(TGraphAsymmErrors *g, double def=1e-3, const std::string& varName="") 
    for (int i=0; i<n; i++) bins[i] = x[i]-exl[i];
    bins[n] = x[n-1]+exh[n-1];
    TH1F *ans = new TH1F(Form("tmp%i",gRandom->Integer(1e9)),"tmp",n,bins);
-//   ans->SetBinContent(1,def);
-//   ans->SetBinError(1,def/5.);
    for (int i=0; i<n; i++) {
       ans->SetBinContent(i+1,y[i]);
       ans->SetBinError(i+1,(eyl[i]+eyh[i])/2);
