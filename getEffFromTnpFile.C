@@ -11,28 +11,60 @@ void getEffFromTnpFile() {
 
 
 
-  TFile *ftnp_RD = new TFile("./SL/tnp_MC_1-3_scenario_10_Upsilon.root");
-  TFile *ftnp_MC = new TFile("./SL/tnp_MC_1-3_scenario_10_Upsilon_Pythia.root");
 
 
+  //TFile *ftnp_RD = new TFile("./SL/tnp_MC_1-3_scenario_10_Upsilon.root");
+  //TFile *ftnp_MC = new TFile("./SL/tnp_MC_1-3_scenario_10_Upsilon_Pythia.root");
+
+
+  //TFile *ftnp_RD = new TFile("./SL/tnp_MC_SL_incoh_jpsi_1-3_scenario_10.root");
+  //TFile *ftnp_MC = new TFile("./SL/tnp_MC_jpsi_1-3_scenario_10_Pythia.root");
+  
+  //TFile *ftnp_RD = new TFile("./files/Data/tnp_Ana_DATA_2_ID_tpTreeTrk_scenario_0.root");
+  //TFile *ftnp_MC = new TFile("./files/MC/tnp_Ana_MC_2_ID_tpTreeTrk_scenario_0.root");
+
+  //TFile *ftnp_RD = new TFile("./files/Data/tnp_Ana_DATA_3_Trg_tpTreeTrk_scenario_0.root");
+  //TFile *ftnp_MC = new TFile("./files/MC/tnp_Ana_MC_3_Trg_tpTreeTrk_scenario_0.root");
+
+
+  //TFile *ftnp_RD = new TFile("./files/Data/tnp_Ana_DATA_1-3_SM_scenario_0.root");
+  //TFile *ftnp_MC = new TFile("./files/MC/tnp_Ana_MC_PbPb_1-3_SM_scenario_0.root");
+
+  TFile *ftnp_RD = new TFile("./newfiles/tnp_DATA_1-3_scenario_10.root");
+  TFile *ftnp_MC = new TFile("./newfiles/tnp_MC_1-3_scenario_10.root");
   
   RooDataSet *ds_RD=NULL;  RooDataSet *ds_MC=NULL;
   TGraphAsymmErrors *gRD=NULL;  TGraphAsymmErrors *gMC=NULL; TGraphAsymmErrors* pull=NULL;
   TCanvas* c = new TCanvas(); 
   TRatioPlot *tr = NULL;
 
+  //TLegend* leg = new TLegend(0.6,0.2,0.9,0.4);
+  //TLegend* leg = new TLegend(0.6,0.2,0.9,0.4);
+  TLegend* leg = new TLegend(0.36,0.1,0.64,0.27); // center bottom
+  //TLegend* leg = new TLegend(0.12,0.7,0.40,0.87); // top left
+  leg->SetBorderSize(1); leg->SetFillColor(0);
 
-  TLegend* leg = new TLegend(0.6,0.2,0.9,0.4);
-  leg->SetBorderSize(0); leg->SetFillColor(0);
 
+  //std::vector<string> plots = {"Trg_pair_eta00_12_cent0_10", "Trg_pair_eta00_12_cent10_20", "Trg_pair_eta00_12_cent20_40", "Trg_pair_eta00_12_cent40_60", "Trg_pair_eta00_12_cent60_100", "Trg_pair_eta00_12_cent0_100"};
+  //std::vector<string> plots = {"TrkMu_absetadep", "TrkMu_pt", "TrkMu_centdep"};
+  //std::vector<string> plots = {"TrkMu_absetadep", "TrkMu_pt"};
+  //std::vector<string> plots = {"TrkMu_abseta00_08", "TrkMu_abseta08_16", "TrkMu_abseta16_24"};
 
   std::vector<string> plots = {"TrkMu_abseta00_08", "TrkMu_abseta08_16", "TrkMu_abseta16_24"};
 
+  //std::vector<string> plots = {"TrkMu_abseta12_16", "TrkMu_abseta16_20", "TrkMu_abseta20_24"};
+  //std::vector<string> plots = {"TrkMu_abseta00_09", "TrkMu_abseta09_12", "TrkMu_abseta12_21", "TrkMu_abseta21_24", "TrkMu_absetadep", "TrkMu_pt"};
+//{"Trg_pair_eta00_12_cent0_10", "Trg_pair_eta00_12_cent10_20", "Trg_pair_eta00_12_cent20_40", "Trg_pair_eta00_12_cent40_60", "Trg_pair_eta00_12_cent60_100", "Trg_pair_eta00_12_cent0_100"};
+  //std::vector<string> vars = {"abseta", "pt", "tag_hiBin"}; //{"pt"};
   std::vector<string> vars = {"pt", "pt", "pt"}; 
+//{"pt", "pt", "pt", "pt", "pt", "pt"};
 
 
   for (uint i=0; i<plots.size(); i++) {
     c->cd(); c->Clear();
+    
+   
+    
     ds_RD = (RooDataSet*) ftnp_RD->Get(Form("tpTreeTrk/%s/fit_eff",plots[i].c_str()));
     ds_MC = (RooDataSet*) ftnp_MC->Get(Form("tpTreeTrk/%s/fit_eff",plots[i].c_str()));
     if (!ds_RD) { std::cout << "RD IS NULL"; }
@@ -47,7 +79,7 @@ void getEffFromTnpFile() {
     gMC->SetMarkerColor(kRed);
     gMC->SetMarkerStyle(kFullCircle);
     if (i==0){
-      leg->AddEntry(gRD,"STARLIGHT","lp");
+      leg->AddEntry(gRD,"DATA","lp");
       leg->AddEntry(gMC,"Pythia MC","lp");
     }
     leg->SetHeader(Form("2018 PbPb, trigger, %s",plots[i].c_str()));
@@ -59,7 +91,15 @@ void getEffFromTnpFile() {
     c->Update();
     tr->GetUpperPad()->cd();
     leg->Draw();
-    c->SaveAs(Form("plots_UPsTest2/hist_%s.pdf",plots[i].c_str()));
+    
+    
+    gStyle->SetOptTitle(0);
+    //TPaveLabel *title = new TPaveLabel(0.4,0.4,0.6,0.6,"new title","brndc");
+    //title->Draw();  
+    
+    
+        
+    c->SaveAs(Form("plots_Data_MC/hist_%s.pdf",plots[i].c_str()));
   }
 
 }
