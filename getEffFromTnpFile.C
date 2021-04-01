@@ -10,13 +10,14 @@
 void getEffFromTnpFile() {
 
 
+/*
 
-//  TFile *ftnp_RD = new TFile("./Output/Data/tnp_DATA_ID_scenario_4.root");
-//  TFile *ftnp_MC = new TFile("./Output/MC/tnp_MC_ID_scenario_4.root");
+  TFile *ftnp_RD = new TFile("./Output/Data/tnp_DATA_ID_scenario_10_290mass340_pol1_unfix.root"); // tnp_DATA_ID_scenario_10_275mass.root
+  TFile *ftnp_MC = new TFile("./Output/MC/tnp_MC_ID_scenario_10.root");
+*/
 
-
-  TFile *ftnp_RD = new TFile("./Output/Data/tnp_DATA_TRG_scenario_4.root");
-  TFile *ftnp_MC = new TFile("./Output/MC/tnp_MC_TRG_scenario_4.root");
+  TFile *ftnp_RD = new TFile("./Output/Data/tnp_DATA_TRG_scenario_10_25m33pol2_unfix.root"); 
+  TFile *ftnp_MC = new TFile("./Output/MC/tnp_MC_TRG_scenario_10.root");
 
 
 
@@ -38,13 +39,13 @@ void getEffFromTnpFile() {
 
 
   // Data vs MC: ID // "TrkMu_1bin", "Trk_ID_absetadep",
-//  std::vector<string> plots = { "Trk_ID_pTdep_abseta00_12", "Trk_ID_pTdep_abseta12_16",  "Trk_ID_pTdep_abseta16_21", "Trk_ID_pTdep_abseta16_21", "Trk_ID_pTdep_abseta21_24", "Trk_ID_centdep"};
-//  std::vector<string> vars = {"pt", "pt", "pt", "pt", "pt", "tag_hiBin"}; 
+  // std::vector<string> plots = { "Trk_ID_pTdep_abseta00_10", "Trk_ID_pTdep_abseta10_16",  "Trk_ID_pTdep_abseta16_21", "Trk_ID_pTdep_abseta16_21", "Trk_ID_pTdep_abseta21_24", "Trk_ID_centdep"};
+  // std::vector<string> vars  = {"pt", "pt", "pt", "pt", "pt", "tag_hiBin"}; 
   // "pt", "abseta", 
  
   // Data vs MC: TRG // "TrkMu_1bin", "Trk_ID_absetadep",
-  std::vector<string> plots = { "Trg_pTdep_abseta00_12", "Trg_pTdep_abseta12_16",  "Trg_pTdep_abseta16_21", "Trg_pTdep_abseta16_21", "Trg_pTdep_abseta21_24", "Trg_centdep"};
-  std::vector<string> vars = {"pt", "pt", "pt", "pt", "pt", "tag_hiBin"}; 
+ std::vector<string> plots = { "Trg_pTdep_abseta00_11", "Trg_pTdep_abseta11_16",  "Trg_pTdep_abseta16_21", "Trg_pTdep_abseta16_21", "Trg_pTdep_abseta21_24", "Trg_centdep"};
+ std::vector<string> vars = {"pt", "pt", "pt", "pt", "pt", "tag_hiBin"}; 
   // "pt", "abseta", 
  
 
@@ -77,7 +78,7 @@ void getEffFromTnpFile() {
 
     tr = new TRatioPlot(g2h(gRD,vars[i].c_str()),g2h(gMC,vars[i].c_str()));
     setTRatioPlotStyle(tr);
-    tr->GetLowerRefYaxis()->SetRangeUser(0.5,1.6);
+    tr->GetLowerRefYaxis()->SetRangeUser(0.7,2.0);
     tr->GetLowerRefYaxis()->SetTitle("Data / MC");
     
     
@@ -111,7 +112,7 @@ void getEffFromTnpFile() {
     //title->Draw();  
     
     
-    c->SaveAs(Form("plots_Data_MC/TRG_test/hist_%s.pdf",plots[i].c_str()));
+    c->SaveAs(Form("plots_Data_MC/ALL/hist_%s.pdf",plots[i].c_str()));
     //c->SaveAs(Form("plots_Data_MC/1-3/hist_%s.pdf",plots[i].c_str()));
     //c->SaveAs(Form("plots_Data_MC/3/hist_%s.pdf",plots[i].c_str()));
     //c->SaveAs(Form("plots_Data_MC/syst_bkg_MC/hist_%s.pdf",plots[i].c_str()));
